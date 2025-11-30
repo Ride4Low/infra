@@ -1,0 +1,6 @@
+FROM alpine
+WORKDIR /app
+
+ADD build/api build/api
+
+ENTRYPOINT ["build/api"]
