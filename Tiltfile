@@ -62,3 +62,33 @@ k8s_resource('trip-service',
     labels = "services"
 )
 ### End of Trip Service ###
+
+### Start of Notifier Service ###
+notifier_compile_cmd = 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/notifier ../notifier'
+
+local_resource(
+    'notifier-service-compile',
+    notifier_compile_cmd,
+    deps = ['../notifier', '../contracts'], labels = "compiles")
+
+docker_build_with_restart(
+    'ride4Low/notifier',
+    '.',
+    entrypoint = ['/app/build/notifier'],
+    dockerfile = './development/docker/notifier.Dockerfile',
+    only = [
+        './build/notifier',
+    ],
+    live_update = [
+        sync('./build/notifier', '/app/build/notifier'),
+    ],
+)
+
+k8s_yaml('./development/k8s/notifier-deployment.yaml')
+
+k8s_resource('notifier',
+    port_forwards = ['8082:8082'],
+    resource_deps = ['notifier-compile'],
+    labels = "services"
+)
+### End of Notifier Service ###
