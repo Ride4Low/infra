@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-service
+spec:
+  selector:
+    matchLabels:
+      app: trip-service
+  template:
+    metadata:
+      labels:
+        app: trip-service
+    spec:
+      containers:
+        - name: trip-service
+          image: ride4Low/trip-service:latest
+          ports:
+            - containerPort: 9093
+          env:
+            - name: OSRM_URL
+              # value: http://router.project-osrm.org/
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: OSRM_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-service
+spec:
+  selector:
+    app: trip-service
+  ports:
+    - protocol: TCP
+      port: 9093
+      targetPort: 9093
+
+
