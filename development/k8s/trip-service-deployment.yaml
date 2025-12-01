@@ -23,6 +23,16 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: OSRM_URL
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credentials
+                  key: MONGODB_URI
+            - name: MONGODB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credentials
+                  key: MONGODB_DATABASE
 ---
 apiVersion: v1
 kind: Service
