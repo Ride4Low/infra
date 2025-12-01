@@ -92,3 +92,17 @@ k8s_resource('notifier',
     labels = "services"
 )
 ### End of Notifier Service ###
+
+### Start of Web Service ###
+docker_build(
+  'ride4Low/web',
+  '../web',
+  dockerfile='./development/docker/web.Dockerfile',
+  only=['.'],
+  ignore=['node_modules', '.next'],
+)
+
+k8s_yaml('./development/k8s/web-deployment.yaml')
+k8s_resource('web', port_forwards=3000, labels="frontend")
+
+### End of Web Service ###
