@@ -3,6 +3,11 @@ load('ext://restart_process', 'docker_build_with_restart')
 k8s_yaml('./development/k8s/app-config.yaml')
 k8s_yaml('./development/k8s/secrets.yaml')
 
+### RabbitMQ ###
+k8s_yaml('./development/k8s/rabbitmq-deployment.yaml')
+k8s_resource('rabbitmq', port_forwards=['5672', '15672'], labels='tooling')
+### End RabbitMQ ###
+
 ### Start of API Service ###
 api_compile_cmd = 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/api ../api'
 
@@ -28,7 +33,7 @@ k8s_yaml('./development/k8s/api-deployment.yaml')
 
 k8s_resource('api',
     port_forwards = ['8081:8081'],
-    resource_deps = ['api-compile'],
+    resource_deps = ['api-compile', 'rabbitmq'],
     labels = "services"
 )
 
@@ -59,7 +64,7 @@ k8s_yaml('./development/k8s/trip-service-deployment.yaml')
 
 k8s_resource('trip-service',
     port_forwards = ['9093:9093'],
-    resource_deps = ['trip-service-compile'],
+    resource_deps = ['trip-service-compile', 'rabbitmq'],
     labels = "services"
 )
 ### End of Trip Service ###
@@ -89,7 +94,7 @@ k8s_yaml('./development/k8s/notifier-deployment.yaml')
 
 k8s_resource('notifier',
     port_forwards = ['8082:8082'],
-    resource_deps = ['notifier-compile'],
+    resource_deps = ['notifier-compile', 'rabbitmq'],
     labels = "services"
 )
 ### End of Notifier Service ###
