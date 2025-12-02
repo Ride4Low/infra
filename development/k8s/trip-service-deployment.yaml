@@ -33,6 +33,11 @@ spec:
                 secretKeyRef:
                   name: mongodb-credentials
                   key: MONGODB_DATABASE
+            - name: RABBITMQ_URI
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: RABBITMQ_URI
 ---
 apiVersion: v1
 kind: Service
