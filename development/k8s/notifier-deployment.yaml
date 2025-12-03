@@ -20,8 +20,11 @@ spec:
           env:
             - name: NOTIFIER_ADDR
               value: ":8082"
-            - name: DRIVER_ADDR
-              value: ":9092"
+            - name: DRIVER_SERVICE_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DRIVER_SERVICE_ADDR
 ---
 apiVersion: v1
 kind: Service

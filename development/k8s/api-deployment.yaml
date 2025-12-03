@@ -27,11 +27,11 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: APP_ENV
-            - name: TRIP_SERVICE_URL
+            - name: TRIP_SERVICE_ADDR
               valueFrom:
                 configMapKeyRef:
                   name: app-config
-                  key: TRIP_SERVICE_URL
+                  key: TRIP_SERVICE_ADDR
 ---
 apiVersion: v1
 kind: Service
