@@ -7,5 +7,7 @@ metadata:
 data:
   APP_ENV: development
   HTTP_ADDR: ":8081"
+  NOTIFIER_ADDR: ":8082"
   OSRM_URL: http://router.project-osrm.org/
   TRIP_SERVICE_URL: "trip-service:9093"
+  DRIVER_ADDR: ":9092"

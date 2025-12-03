@@ -17,6 +17,11 @@ spec:
           image: ride4Low/notifier:latest
           ports:
             - containerPort: 8082
+          env:
+            - name: NOTIFIER_ADDR
+              value: ":8082"
+            - name: DRIVER_ADDR
+              value: ":9092"
 ---
 apiVersion: v1
 kind: Service
