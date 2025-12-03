@@ -99,6 +99,37 @@ k8s_resource('notifier',
 )
 ### End of Notifier Service ###
 
+
+### Start of Driver Service ###
+driver_compile_cmd = 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/driver-service ../driver-service/cmd/server/main.go'
+
+local_resource(
+    'driver-service-compile',
+    driver_compile_cmd,
+    deps = ['../driver-service', '../contracts'], labels = "compiles")
+
+docker_build_with_restart(
+    'ride4Low/driver-service',
+    '.',
+    entrypoint = ['/app/build/driver-service'],
+    dockerfile = './development/docker/driver-service.Dockerfile',
+    only = [
+        './build/driver-service',
+    ],
+    live_update = [
+        sync('./build/driver-service', '/app/build/driver-service'),
+    ],
+)
+
+k8s_yaml('./development/k8s/driver-service-deployment.yaml')
+
+k8s_resource('driver-service',
+    port_forwards = ['9092:9092'],
+    resource_deps = ['driver-service-compile', 'rabbitmq'],
+    labels = "services"
+)
+### End of Driver Service ###
+
 ### Start of Web Service ###
 docker_build(
   'ride4Low/web',
