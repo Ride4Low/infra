@@ -36,11 +36,3 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-credentials
                   key: uri
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: payment-service
-spec:
-  selector:
-    app: payment-service
