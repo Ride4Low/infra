@@ -63,7 +63,6 @@ docker_build_with_restart(
 k8s_yaml('./development/k8s/trip-service-deployment.yaml')
 
 k8s_resource('trip-service',
-    port_forwards = ['9093:9093'],
     resource_deps = ['trip-service-compile', 'rabbitmq'],
     labels = "services"
 )
@@ -124,11 +123,39 @@ docker_build_with_restart(
 k8s_yaml('./development/k8s/driver-service-deployment.yaml')
 
 k8s_resource('driver-service',
-    port_forwards = ['9092:9092'],
     resource_deps = ['driver-service-compile', 'rabbitmq'],
     labels = "services"
 )
 ### End of Driver Service ###
+
+### Start of Payment Service ###
+payment_compile_cmd = 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/payment-service ../payment-service/cmd/main.go'
+
+local_resource(
+    'payment-service-compile',
+    payment_compile_cmd,
+    deps = ['../payment-service', '../contracts'], labels = "compiles")
+
+docker_build_with_restart(
+    'ride4Low/payment-service',
+    '.',
+    entrypoint = ['/app/build/payment-service'],
+    dockerfile = './development/docker/payment-service.Dockerfile',
+    only = [
+        './build/payment-service',
+    ],
+    live_update = [
+        sync('./build/payment-service', '/app/build/payment-service'),
+    ],
+)
+
+k8s_yaml('./development/k8s/payment-service-deployment.yaml')
+
+k8s_resource('payment-service',
+    resource_deps = ['payment-service-compile', 'rabbitmq'],
+    labels = "services"
+)
+### End of Payment Service ###
 
 ### Start of Web Service ###
 docker_build(

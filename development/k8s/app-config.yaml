@@ -11,3 +11,5 @@ data:
   OSRM_URL: http://router.project-osrm.org/
   TRIP_SERVICE_ADDR: "trip-service:9093"
   DRIVER_SERVICE_ADDR: "driver-service:9092"
+  STRIPE_SUCCESS_URL: "http://localhost:3000?payment=success"
+  STRIPE_CANCEL_URL: "http://localhost:3000?payment=cancel"

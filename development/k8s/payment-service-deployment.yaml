@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+        - name: payment-service
+          image: ride4Low/payment-service:latest
+          env:
+            - name: STRIPE_SUCCESS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: STRIPE_SUCCESS_URL
+            - name: STRIPE_CANCEL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: STRIPE_CANCEL_URL
+            - name: STRIPE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secrets
+                  key: stripe-secret-key
+            - name: RABBITMQ_URI
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: uri
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+spec:
+  selector:
+    app: payment-service
