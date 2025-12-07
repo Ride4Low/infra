@@ -32,6 +32,16 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: TRIP_SERVICE_ADDR
+            - name: STRIPE_WEBHOOK_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secrets
+                  key: stripe-webhook-key
+            - name: RABBITMQ_URI
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: uri
 ---
 apiVersion: v1
 kind: Service
