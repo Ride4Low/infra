@@ -93,7 +93,7 @@ k8s_yaml('./development/k8s/notifier-deployment.yaml')
 
 k8s_resource('notifier',
     port_forwards = ['8082:8082'],
-    resource_deps = ['notifier-compile', 'rabbitmq'],
+    resource_deps = ['notifier-service-compile', 'rabbitmq'],
     labels = "services"
 )
 ### End of Notifier Service ###
