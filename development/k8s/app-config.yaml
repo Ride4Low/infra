@@ -13,3 +13,4 @@ data:
   DRIVER_SERVICE_ADDR: "driver-service:9092"
   STRIPE_SUCCESS_URL: "http://localhost:3000?payment=success"
   STRIPE_CANCEL_URL: "http://localhost:3000?payment=cancel"
+  JAEGER_ENDPOINT: "jaeger:4317"
