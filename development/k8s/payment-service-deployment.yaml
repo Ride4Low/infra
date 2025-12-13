@@ -41,3 +41,13 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: JAEGER_ENDPOINT
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credentials
+                  key: uri
+            - name: MONGODB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credentials
+                  key: trip_database
