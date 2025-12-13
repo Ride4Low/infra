@@ -14,3 +14,4 @@ data:
   STRIPE_SUCCESS_URL: "http://localhost:3000?payment=success"
   STRIPE_CANCEL_URL: "http://localhost:3000?payment=cancel"
   JAEGER_ENDPOINT: "jaeger:4317"
+  FACILITATOR_ENDPOINT: "http://facilitator-service:4022"

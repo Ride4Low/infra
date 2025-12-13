@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: facilitator-service
+spec:
+  selector:
+    matchLabels:
+      app: facilitator-service
+  template:
+    metadata:
+      labels:
+        app: facilitator-service
+    spec:
+      containers:
+        - name: facilitator-service
+          image: ride4Low/facilitator-service:latest
+          ports:
+            - containerPort: 4022
+          env:
+            - name: EVM_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: facilitator-secrets
+                  key: evm-private-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: facilitator-service
+spec:
+  selector:
+    app: facilitator-service
+  ports:
+    - protocol: TCP
+      port: 4022
+      targetPort: 4022

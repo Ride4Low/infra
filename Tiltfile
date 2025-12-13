@@ -175,3 +175,32 @@ k8s_resource('web', port_forwards=3000, labels="frontend")
 k8s_yaml('./development/k8s/jaeger-deployment.yaml')
 k8s_resource('jaeger', port_forwards=['16686:16686', '14268:14268'], labels="tooling")
 ### End of Jaeger ###
+
+### Start of Facilitator Service ###
+facilitator_compile_cmd = 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/facilitator-service ../facilitator-service'
+
+local_resource(
+    'facilitator-service-compile',
+    facilitator_compile_cmd,
+    deps = ['../facilitator-service', '../contracts'], labels = "compiles")
+
+docker_build_with_restart(
+    'ride4Low/facilitator-service',
+    '.',
+    entrypoint = ['/app/build/facilitator-service'],
+    dockerfile = './development/docker/facilitator-service.Dockerfile',
+    only = [
+        './build/facilitator-service',
+    ],
+    live_update = [
+        sync('./build/facilitator-service', '/app/build/facilitator-service'),
+    ],
+)
+
+k8s_yaml('./development/k8s/facilitator-service-deployment.yaml')
+
+k8s_resource('facilitator-service',
+    resource_deps = ['facilitator-service-compile'],
+    labels = "services"
+)
+### End of Facilitator Service ###
